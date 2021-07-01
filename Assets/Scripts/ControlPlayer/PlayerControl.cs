@@ -5,69 +5,31 @@ using UnityEngine;
 
 public class PlayerControl : MonoBehaviour
 {
-
-    [SerializeField]
+     [SerializeField]
     private float velocidadMovimiento;
-    
-    [SerializeField]
-    private float velocidadRotacion;
-
-    [SerializeField]
-    private float velocidadRotacionHorizontal;
-
-    [SerializeField]
-    private float velocidadRotacionVertical;
-
-    public bool invertir;
-
     Animator animPlayer;
 
-    // Start is called before the first frame update
-    void Start()
+    public float speed = 10.0F;
+    public float rotationSpeed = 100.0F;
+
+   void Start()
     {
-        invertir = true;
+        
     }
 
     // Update is called once per frame
-    void Update()
+   
+    void Update() 
     {
-        float h_Rotation = Input.GetAxisRaw("Mouse X");
-        float v_Rotation = Input.GetAxisRaw("Mouse Y");
-
-
-        controlPersonaje();
-        LookAtAim(h_Rotation, v_Rotation);
-
-        if (invertir  == false)
-        {
-            velocidadRotacionVertical =-velocidadRotacionVertical;
-        }
-
-       
+        float translation = Input.GetAxis("Vertical") * speed;
+        float rotation = Input.GetAxis("Horizontal") * rotationSpeed;
+        translation *= Time.deltaTime;
+        rotation *= Time.deltaTime;
+        transform.Translate(0, 0, translation);
+        transform.Rotate(0, rotation, 0);
     }
-
-    private void LookAtAim()
-    {
-        float h_Rotation = Input.GetAxisRaw("Mouse X");
-        Vector3 rotation_H= new Vector3(0,h_Rotation,0);
-        rotation_H *=Time.deltaTime*velocidadRotacion;
-        this.transform.Rotate(rotation_H);
-    }
-
-    //----- personaje first person
-
-
-    private void LookAtAim(float h, float v)
-    {
-        float h_Rotation = h;
-        float v_Rotation = v;
-        Vector3 rotation= new Vector3(v_Rotation,h_Rotation,0);
-        rotation.x *=Time.deltaTime*velocidadRotacionHorizontal;
-        rotation.y *=Time.deltaTime*velocidadRotacionVertical;
-        
-        this.transform.localEulerAngles = new Vector3(rotation.y,rotation.x,0);
-    }
-
+  
+    
     private void controlPersonaje()
     {
         float vertical=Input.GetAxis("Vertical");
