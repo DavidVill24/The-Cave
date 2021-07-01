@@ -12,6 +12,16 @@ public class PlayerControl : MonoBehaviour
     [SerializeField]
     private float velocidadRotacion;
 
+    [SerializeField]
+    private float velocidadRotacionHorizontal;
+
+    [SerializeField]
+    private float velocidadRotacionVertical;
+
+    public bool invertir;
+
+    Animator animPlayer;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -28,10 +38,12 @@ public class PlayerControl : MonoBehaviour
         controlPersonaje();
         LookAtAim(h_Rotation, v_Rotation);
 
-        if (invertir==false)
+        if (invertir  == false)
         {
-            velocidadRotacion=- velocidadRotacioVertical:
+            velocidadRotacionVertical =-velocidadRotacionVertical;
         }
+
+       
     }
 
     private void LookAtAim()
@@ -50,8 +62,10 @@ public class PlayerControl : MonoBehaviour
         float h_Rotation = h;
         float v_Rotation = v;
         Vector3 rotation= new Vector3(v_Rotation,h_Rotation,0);
-        rotation *=Time.deltaTime*velocidadRotacion;
-        this.transform.localEulerAngles += rotation;
+        rotation.x *=Time.deltaTime*velocidadRotacionHorizontal;
+        rotation.y *=Time.deltaTime*velocidadRotacionVertical;
+        
+        this.transform.localEulerAngles = new Vector3(rotation.y,rotation.x,0);
     }
 
     private void controlPersonaje()
@@ -62,8 +76,18 @@ public class PlayerControl : MonoBehaviour
 
         direction *=Time.deltaTime+velocidadMovimiento;
 
+        bool directionForward = direction.z != 0? true:false;
         //this.transform.position += direction;
 
         this.transform.Translate(direction);
+        animPlayer.SetBool("run",directionForward);
+    }
+
+    private void Salto()
+    {
+        if (Input.GetKeyDown(KeyCode.Space ))
+        {
+            animPlayer.SetTrigger("Jump");
+        }
     }
 }
